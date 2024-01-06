@@ -18,6 +18,7 @@ export const fetchEventsAPI = async () => {
       dataSource: "ClusterKMS",
     });
     console.log("response", response);
+    return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
     throw new Error("Error fetching users");

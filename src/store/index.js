@@ -8,15 +8,16 @@ export default createStore({
   mutations: {
     // Mutations are responsible for changing the state
     getEvents(event) {},
-    setEvents(events) {
-      this.events = events;
+    setEvents(state, events) {
+      console.log("events", events);
+      state.events = events;
     },
   },
   actions: {
     async fetchEvents({ commit }) {
       try {
         const events = await fetchEventsAPI();
-        commit("setUsers", events);
+        commit("setEvents", events.documents);
       } catch (error) {
         console.error(error);
         commit("setError", "Error fetching users");
@@ -38,7 +39,7 @@ export default createStore({
 
       return users;
     },
-    getError: (state) => state.error,
+    events: (state) => state.events,
   },
   modules: {
     // your modules here

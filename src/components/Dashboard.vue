@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" persistent width="1024">
       <template v-slot:activator="{ props }">
         <v-btn color="primary" class="dialog__open" v-bind="props">
-          Open Dialog
+          Add Event
         </v-btn>
       </template>
       <v-card>
@@ -14,26 +14,46 @@
           <v-container>
             <v-row>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Event title"
-                  hint="example of helper text only on focus"
-                ></v-text-field>
+                <v-text-field label="Event title"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
                   label="Promotion message"
-                  hint="example of persistent helper text"
                   persistent-hint
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
+                <div>Start Date</div>
+                <input type="date" />
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <div>Start End</div>
+                <input type="date" />
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <div>Registration Start Date Time</div>
+                <input type="date" />
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <div>Registration End Date Time</div>
+                <input type="date" />
+              </v-col>
+
+              <v-col cols="12">
                 <v-text-field
-                  label="Promotion message"
-                  hint="example of persistent helper text"
+                  label="Add item"
+                  persistent-hint
+                  required
+                ></v-text-field>
+                <v-btn color="blue-darken-1" variant="text" @click="addItem">
+                  Add item
+                </v-btn>
+              </v-col>
+
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  label="Number of serving items"
                   persistent-hint
                   required
                 ></v-text-field>
@@ -74,7 +94,6 @@
               </v-col>
             </v-row>
           </v-container>
-          <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -89,25 +108,45 @@
     </v-dialog>
   </v-row>
 
-  <v-table>
-    <thead>
-      <tr>
-        <th class="text-left">Name</th>
-        <th class="text-left">Calories</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="item in desserts" :key="item.name">
-        <td>{{ item.name }}</td>
-        <td>{{ item.calories }}</td>
-      </tr>
-    </tbody>
-  </v-table>
+  <div class="list-events">
+    <v-table>
+      <thead>
+        <tr>
+          <th class="text-left">Event title</th>
+          <th class="text-left">Promotion Message</th>
+          <th class="text-left">Registration Start Date Time</th>
+          <th class="text-left">Registration End Date Time</th>
+          <th class="text-left">Start Date Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in events" :key="item.name">
+          <td>{{ item.Title }}</td>
+          <td>{{ item.PromotionMessage }}</td>
+          <td>
+            {{
+              moment(item.RegistrationStartDateTime).format("MM/DD/YYYY HH:mm")
+            }}
+          </td>
+          <td>
+            {{
+              moment(item.RegistrationEndDateTime).format("MM/DD/YYYY HH:mm")
+            }}
+          </td>
+          <td>{{ moment(item.StartDateTime).format("MM/DD/YYYY HH:mm") }}</td>
+        </tr>
+      </tbody>
+    </v-table>
+  </div>
 </template>
 <script setup>
-// import { useVuelidate } from "@vuelidate/core";
-// import { email, required } from "@vuelidate/validators";
-import { reactive, ref } from "vue";
+import moment from "moment";
+import { computed, reactive, ref } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const events = computed(() => store.getters.events);
 
 const initialState = {
   name: "",
@@ -115,6 +154,9 @@ const initialState = {
   select: null,
   checkbox: null,
   dialog: false,
+  newEvent: {
+    Title: "",
+  },
 };
 
 const dialog = ref(false);
@@ -167,11 +209,7 @@ const desserts = [
   },
 ];
 
-// const v$ = useVuelidate(rules, state);
-
 function clear() {
-  // v$.value.$reset();
-
   for (const [key, value] of Object.entries(initialState)) {
     state[key] = value;
   }
@@ -187,5 +225,9 @@ function submit() {
   &__open {
     margin-top: 10px;
   }
+}
+
+.list-events {
+  margin-top: 30px;
 }
 </style>
