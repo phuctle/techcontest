@@ -35,7 +35,7 @@
                 />
               </v-col>
               <v-col cols="12" sm="6" md="4">
-                <div>Start End</div>
+                <div>End Date</div>
                 <input
                   type="datetime-local"
                   v-model="state.newEvent.EndDateTime"
@@ -158,6 +158,7 @@
           <th class="text-left">Registration Start Date Time</th>
           <th class="text-left">Registration End Date Time</th>
           <th class="text-left">Start Date Time</th>
+          <th class="text-left">End Date Time</th>
         </tr>
       </thead>
       <tbody>
@@ -175,6 +176,7 @@
             }}
           </td>
           <td>{{ moment(item.StartDateTime).format("MM/DD/YYYY HH:mm") }}</td>
+          <td>{{ moment(item.EndDateTime).format("MM/DD/YYYY HH:mm") }}</td>
         </tr>
       </tbody>
     </v-table>

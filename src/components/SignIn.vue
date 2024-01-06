@@ -79,8 +79,10 @@ export default {
   },
   methods: {
     signIn() {
-      if (this.email === "a" && this.password === "a") {
+      if (this.email === "admin@appyours.com" && this.password === "12345") {
         this.$router.push("/dashboard");
+      } else {
+        this.$router.push("/client");
       }
     },
   },

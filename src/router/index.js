@@ -1,3 +1,4 @@
+import Client from "@/views/Client.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import SignIn from "@/views/SignIn.vue";
 import { createRouter, createWebHistory } from "vue-router";
@@ -12,6 +13,11 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/client",
+    name: "Client",
+    component: Client,
   },
 ];
 

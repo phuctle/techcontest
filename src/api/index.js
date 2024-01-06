@@ -40,3 +40,22 @@ export const createEventsAPI = async (data) => {
     throw new Error("Error fetching users");
   }
 };
+
+export const pushRegistrationAPI = async (EventID, UserID) => {
+  try {
+    const response = await apiClient.post("/insertOne", {
+      collection: "Registration",
+      database: "AppyOurs",
+      dataSource: "ClusterKMS",
+      document: {
+        EventID: EventID,
+        UserID: UserID,
+      },
+    });
+    console.log("response", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw new Error("Error fetching users");
+  }
+};

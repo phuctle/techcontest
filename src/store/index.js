@@ -1,4 +1,8 @@
-import { createEventsAPI, fetchEventsAPI } from "@/api/index.js";
+import {
+  createEventsAPI,
+  fetchEventsAPI,
+  pushRegistrationAPI,
+} from "@/api/index.js";
 import { createStore } from "vuex";
 
 export default createStore({
@@ -27,6 +31,17 @@ export default createStore({
       try {
         console.log("data", data);
         const events = await createEventsAPI(data);
+        // commit("setEvents", events.documents);
+      } catch (error) {
+        console.error(error);
+        commit("setError", "Error fetching users");
+      }
+    },
+    async pushRegistrationAPI({ commit }, data) {
+      try {
+        console.log("data", data);
+        const { email, id } = data;
+        const events = await pushRegistrationAPI(id, email);
         // commit("setEvents", events.documents);
       } catch (error) {
         console.error(error);
