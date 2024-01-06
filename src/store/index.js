@@ -1,4 +1,4 @@
-import { fetchEventsAPI } from "@/api/index.js";
+import { createEventsAPI, fetchEventsAPI } from "@/api/index.js";
 import { createStore } from "vuex";
 
 export default createStore({
@@ -18,6 +18,16 @@ export default createStore({
       try {
         const events = await fetchEventsAPI();
         commit("setEvents", events.documents);
+      } catch (error) {
+        console.error(error);
+        commit("setError", "Error fetching users");
+      }
+    },
+    async createEventsAPI({ commit }, data) {
+      try {
+        console.log("data", data);
+        const events = await createEventsAPI(data);
+        // commit("setEvents", events.documents);
       } catch (error) {
         console.error(error);
         commit("setError", "Error fetching users");

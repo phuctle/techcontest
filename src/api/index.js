@@ -25,22 +25,18 @@ export const fetchEventsAPI = async () => {
   }
 };
 
-export const deleteUserAPI = async (userId) => {
+export const createEventsAPI = async (data) => {
   try {
-    const response = await apiClient.delete(`/user/${userId}`);
+    const response = await apiClient.post("/insertOne", {
+      collection: "Event",
+      database: "AppyOurs",
+      dataSource: "ClusterKMS",
+      document: data,
+    });
+    console.log("response", response);
     return response.data;
   } catch (error) {
-    console.error(`Error deleting user with ID ${userId}:`, error);
-    throw new Error("Error deleting user");
-  }
-};
-
-export const createUserAPI = async (userData) => {
-  try {
-    const response = await apiClient.post("/user", userData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creating user:", error);
-    throw new Error("Error creating user");
+    console.error("Error fetching users:", error);
+    throw new Error("Error fetching users");
   }
 };

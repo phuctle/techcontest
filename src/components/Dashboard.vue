@@ -14,83 +14,106 @@
           <v-container>
             <v-row>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Event title"></v-text-field>
+                <v-text-field
+                  v-model="state.newEvent.Title"
+                  label="Event title"
+                ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
                   label="Promotion message"
                   persistent-hint
                   required
+                  v-model="state.newEvent.PromotionMessage"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <div>Start Date</div>
-                <input type="date" />
+                <input
+                  type="datetime-local"
+                  v-model="state.newEvent.StartDateTime"
+                />
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <div>Start End</div>
-                <input type="date" />
+                <input
+                  type="datetime-local"
+                  v-model="state.newEvent.EndDateTime"
+                />
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <div>Registration Start Date Time</div>
-                <input type="date" />
+                <input
+                  type="datetime-local"
+                  v-model="state.newEvent.RegistrationStartDateTime"
+                />
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <div>Registration End Date Time</div>
-                <input type="date" />
+                <input
+                  type="datetime-local"
+                  v-model="state.newEvent.RegistrationEndDateTime"
+                />
               </v-col>
 
+              <v-col cols="12"> List Item </v-col>
+              <template v-for="item in state.newEvent.items">
+                <v-col cols="12" sm="6" md="4">
+                  <p>{{ item.description }}</p>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <img width="100px" :src="item.imageURL" />
+                </v-col>
+              </template>
               <v-col cols="12">
-                <v-text-field
-                  label="Add item"
-                  persistent-hint
-                  required
-                ></v-text-field>
-                <v-btn color="blue-darken-1" variant="text" @click="addItem">
-                  Add item
-                </v-btn>
-              </v-col>
+                <v-dialog v-model="dialog2" persistent width="1024">
+                  <template v-slot:activator="{ props }">
+                    <v-btn color="primary" class="dialog__open" v-bind="props">
+                      Add Event
+                    </v-btn>
+                  </template>
 
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Number of serving items"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Password*"
-                  type="password"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  :items="[
-                    'Skiing',
-                    'Ice hockey',
-                    'Soccer',
-                    'Basketball',
-                    'Hockey',
-                    'Reading',
-                    'Writing',
-                    'Coding',
-                    'Basejump',
-                  ]"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
+                  <v-card>
+                    <v-card-title>
+                      <span class="text-h5">Add Item</span>
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+                        <v-row>
+                          <v-col cols="12" sm="6" md="4">
+                            <v-text-field
+                              v-model="state.description"
+                              label="Descriptions"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="4">
+                            <v-text-field
+                              v-model="state.imageURL"
+                              label="Image URL"
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue-darken-1"
+                        variant="text"
+                        @click="dialog2 = false"
+                      >
+                        Close
+                      </v-btn>
+                      <v-btn
+                        color="blue-darken-1"
+                        variant="text"
+                        @click="addItem"
+                      >
+                        Save
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-col>
             </v-row>
           </v-container>
@@ -100,13 +123,31 @@
           <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
             Close
           </v-btn>
-          <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+          <v-btn color="blue-darken-1" variant="text" @click="submit">
             Save
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </v-row>
+
+  <!-- <v-col cols="12" sm="6">
+    <v-autocomplete
+      :items="[
+        'Skiing',
+        'Ice hockey',
+        'Soccer',
+        'Basketball',
+        'Hockey',
+        'Reading',
+        'Writing',
+        'Coding',
+        'Basejump',
+      ]"
+      label="Interests"
+      multiple
+    ></v-autocomplete>
+  </v-col> -->
 
   <div class="list-events">
     <v-table>
@@ -156,67 +197,40 @@ const initialState = {
   dialog: false,
   newEvent: {
     Title: "",
+    PromotionMessage: "",
+    StartDateTime: "",
+    EndDateTime: "",
+    RegistrationStartDateTime: "",
+    RegistrationEndDateTime: "",
+    items: [],
   },
+  description: "",
+  imageURL:
+    "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg",
 };
 
 const dialog = ref(false);
+const dialog2 = ref(false);
 
 const state = reactive({
   ...initialState,
 });
 
-const items = ["Item 1", "Item 2", "Item 3", "Item 4"];
-const desserts = [
-  {
-    name: "Frozen Yogurt",
-    calories: 159,
-  },
-  {
-    name: "Ice cream sandwich",
-    calories: 237,
-  },
-  {
-    name: "Eclair",
-    calories: 262,
-  },
-  {
-    name: "Cupcake",
-    calories: 305,
-  },
-  {
-    name: "Gingerbread",
-    calories: 356,
-  },
-  {
-    name: "Jelly bean",
-    calories: 375,
-  },
-  {
-    name: "Lollipop",
-    calories: 392,
-  },
-  {
-    name: "Honeycomb",
-    calories: 408,
-  },
-  {
-    name: "Donut",
-    calories: 452,
-  },
-  {
-    name: "KitKat",
-    calories: 518,
-  },
-];
+const save = (payload) => store.dispatch("createEventsAPI", payload);
+const fetchEvents = () => store.dispatch("fetchEvents");
 
-function clear() {
-  for (const [key, value] of Object.entries(initialState)) {
-    state[key] = value;
-  }
+async function submit() {
+  dialog.value = false;
+  await save(state.newEvent);
+  fetchEvents();
 }
 
-function submit() {
-  console.log("submit");
+function addItem() {
+  dialog2.value = false;
+  state.newEvent.items.push({
+    description: state.description,
+    imageURL: state.imageURL,
+  });
 }
 </script>
 
